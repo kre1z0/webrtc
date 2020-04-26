@@ -74,16 +74,14 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        STATIC_PATH: JSON.stringify(staticPath),
-        LANG: JSON.stringify(lang)
+        STATIC_PATH: JSON.stringify(staticPath)
       }
     }),
     new HTMLPlugin({
-      title: lang === "ru" ? "Бизнес-навигатор МСП" : "SME Business Navigator",
+      title: "Video",
       config: "{{config|safe}}",
       template,
       minify: true
-    }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    })
   ]
 };
