@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  entry: resolve("../src/client.js"),
+  entry: resolve("../src/client.tsx"),
   template: resolve("../src/index.html"),
   src: resolve("../src"),
   dist: resolve("../dist"),

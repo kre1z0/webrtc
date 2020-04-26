@@ -1,28 +1,23 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { useRef, RefObject, useEffect, useState } from "react";
 
-import { VideoContainer, Resizer } from "components/Video/styled";
+import { fetchStream } from "api/video";
+import { Resizer } from "components/Resizer/Resizer";
+import { VideoContainer } from "components/Video/styled";
 
 const widthRatio = 4;
 
 export const Video = () => {
-  const video = createRef();
-  const [ratio, setRatio] = useState(0);
-  const [width, setWidth] = useState(window.innerWidth / widthRatio);
+  const video: RefObject<HTMLVideoElement> = useRef(null);
   const [error, setError] = useState(null);
+  const [ratio, setRatio] = useState(0);
 
   useEffect(() => {
     async function fetchVideo() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-          },
-          audio: false,
-        });
+        const stream = await fetchStream();
 
         video.current.srcObject = stream;
-        video.current.play();
+        await video.current.play();
 
         setRatio(
           stream.getVideoTracks()[0].getSettings().width /
@@ -35,14 +30,14 @@ export const Video = () => {
     fetchVideo();
   }, []);
 
+  const width = window.innerWidth / widthRatio;
   const height = Math.round(width / ratio);
-  const percent = 0.15;
-  const resizerWidth = Math.round(width * percent);
 
   return (
     <VideoContainer>
-      <video width={width} height={height} ref={video} />
-      <Resizer width={resizerWidth} />
+      <Resizer element={video.current} ratio={ratio}>
+        <video ref={video} width={width} height={height} />
+      </Resizer>
     </VideoContainer>
   );
 };
