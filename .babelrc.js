@@ -7,7 +7,7 @@ const targets = isDev
       edge: 14,
       firefox: 45,
       chrome: 49,
-      safari: 10
+      safari: 10,
     };
 
 const presets = [
@@ -15,12 +15,11 @@ const presets = [
     "@babel/preset-env",
     {
       targets,
-      corejs: "2",
       useBuiltIns: "usage",
-      modules: false
-    }
+      modules: false,
+    },
   ],
-  "@babel/preset-react"
+  "@babel/preset-react",
 ];
 
 const plugins = [
@@ -28,18 +27,9 @@ const plugins = [
   "@babel/plugin-syntax-dynamic-import",
   ["@babel/plugin-proposal-class-properties", { loose: false }],
   "@babel/plugin-transform-runtime",
-  "react-hot-loader/babel"
 ];
 
 module.exports = {
   plugins,
   presets,
-  env: {
-    test: {
-      plugins: ["@babel/plugin-transform-modules-commonjs"]
-    },
-    production: {
-      plugins: ["transform-react-remove-prop-types"]
-    }
-  }
 };

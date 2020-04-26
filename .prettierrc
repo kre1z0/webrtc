@@ -6,7 +6,7 @@
     {
       "files": "*.js",
       "options": {
-        "trailingComma": "none"
+        "trailingComma": "all"
       }
     }
   ]

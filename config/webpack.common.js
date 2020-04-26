@@ -16,11 +16,27 @@ module.exports = {
   resolve: {
     modules: [src, nodeModules],
     extensions: [".ts", ".tsx", ".js", "jsx", ".json"],
-    alias: { "react-dom": "@hot-loader/react-dom", "~": src }
+    alias: { "~": src }
   },
 
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: babelOptions
+          },
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true
+            }
+          }
+        ],
+        include: [src]
+      },
       {
         test: /\.jsx?$/,
         loader: "babel-loader",
@@ -67,6 +83,20 @@ module.exports = {
           limit: 10000,
           name: `${staticPath}/fonts/[name].[hash:7].[ext]`
         }
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        enforce: "pre",
+        use: [
+          {
+            options: {
+              eslintPath: require.resolve("eslint"),
+              quiet: true
+            },
+            loader: require.resolve("eslint-loader")
+          }
+        ],
+        exclude: /node_modules/
       }
     ]
   },
