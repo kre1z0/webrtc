@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState, useRef } from "react";
 
+import { getPosition } from "utils/events";
 import { Container, ResizeControl } from "components/Resizer/styled";
 
 type ResizerProps = {
@@ -15,38 +16,40 @@ export const Resizer: React.FC<ResizerProps> = ({ element, ratio = 1, children }
   const container = useRef(null);
   const myStateRef = useRef(null);
 
-  const setFromEvent = (event): void => setPosition({ x: event.clientX, y: event.clientY });
+  const setFromEvent = (event): void => setPosition(getPosition(event));
   const setOnlyStartFromEvent = (event): { x: number; y: number } =>
-    (myStateRef.current = { x: event.clientX, y: event.clientY });
+    (myStateRef.current = getPosition(event));
 
   const setDrop = (event): void => {
     const rect = container.current.getBoundingClientRect();
     const { left, top } = rect;
     const difX = myStateRef.current.x - left;
     const difY = myStateRef.current.y - top;
+    const evt = getPosition(event);
 
-    container.current.style.left = `${event.clientX - difX}px`;
-    container.current.style.top = `${event.clientY - difY}px`;
+    container.current.style.left = `${evt.x - difX}px`;
+    container.current.style.top = `${evt.y - difY}px`;
   };
 
   const onMouseUp = () => {
-    window.removeEventListener("mousemove", setFromEvent);
+    ["mousemove", "touchmove"].forEach((evt) => window.removeEventListener(evt, setFromEvent));
     setStartPosition(null);
     setElementWidth(+element.getAttribute("width"));
     element.setAttribute("draggable", "true");
   };
 
   const setStartFromEvent = (event): void => {
-    window.addEventListener("mousemove", setFromEvent);
-    window.addEventListener("mouseup", onMouseUp);
-    setStartPosition({ x: event.clientX, y: event.clientY });
+    ["mousemove", "touchmove"].forEach((evt) => window.addEventListener(evt, setFromEvent));
+    ["mouseup", "touchend"].forEach((evt) => window.addEventListener(evt, onMouseUp));
+
+    setStartPosition(getPosition(event));
     element.setAttribute("draggable", "false");
   };
 
   useEffect(() => {
     return () => {
-      window.removeEventListener("mousemove", setFromEvent);
-      window.removeEventListener("mouseup", onMouseUp);
+      ["mousemove", "touchmove"].forEach((evt) => window.removeEventListener(evt, setFromEvent));
+      ["mouseup", "touchend"].forEach((evt) => window.removeEventListener(evt, onMouseUp));
     };
   }, []);
 
@@ -74,7 +77,11 @@ export const Resizer: React.FC<ResizerProps> = ({ element, ratio = 1, children }
   return (
     <Container ref={container}>
       {children}
-      <ResizeControl onMouseDown={setStartFromEvent} draggable={false} />
+      <ResizeControl
+        onMouseDown={setStartFromEvent}
+        onTouchStart={setStartFromEvent}
+        draggable={false}
+      />
     </Container>
   );
 };
