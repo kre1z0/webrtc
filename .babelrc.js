@@ -15,6 +15,7 @@ const presets = [
     "@babel/preset-env",
     {
       targets,
+      corejs: "2",
       useBuiltIns: "usage",
       modules: false,
     },

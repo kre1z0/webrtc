@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "homepage": "http://kre1z0.github.io/webrtc",
+  "private": false,
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js --progress --inline",
     "build": "cross-env NODE_ENV=production LANG=ru webpack --config ./config/webpack.prod.js --progress --inline",
+    "deploy": "gh-pages -d dist",
     "prettier": "prettier --write \"**/*.js\""
   },
   "repository": {
@@ -27,7 +30,6 @@
       "last 1 ie version"
     ]
   },
-  "homepage": "",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
@@ -52,10 +54,12 @@
     "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.2",
+    "dynamic-cdn-webpack-plugin": "^5.0.0",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-react": "^7.19.0",
     "file-loader": "^6.0.0",
+    "gh-pages": "^2.2.0",
     "html-webpack-plugin": "^4.2.0",
     "module-to-cdn": "^3.1.5",
     "postcss-flexbugs-fixes": "^4.2.0",
