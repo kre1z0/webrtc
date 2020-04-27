@@ -14,17 +14,17 @@ export const Resizer: React.FC<ResizerProps> = ({ element, ratio = 1, children }
   const [position, setPosition] = useState(null);
   const [elementWidth, setElementWidth] = useState(null);
   const container = useRef(null);
-  const myStateRef = useRef(null);
+  const startRef = useRef(null);
 
   const setFromEvent = (event): void => setPosition(getPosition(event));
   const setOnlyStartFromEvent = (event): { x: number; y: number } =>
-    (myStateRef.current = getPosition(event));
+    (startRef.current = getPosition(event));
 
   const setDrop = (event): void => {
     const rect = container.current.getBoundingClientRect();
     const { left, top } = rect;
-    const difX = myStateRef.current.x - left;
-    const difY = myStateRef.current.y - top;
+    const difX = startRef.current.x - left;
+    const difY = startRef.current.y - top;
     const evt = getPosition(event);
 
     container.current.style.left = `${evt.x - difX}px`;
@@ -56,8 +56,12 @@ export const Resizer: React.FC<ResizerProps> = ({ element, ratio = 1, children }
   useEffect(() => {
     if (element) {
       element.setAttribute("draggable", "true");
-      element.addEventListener("dragstart", setOnlyStartFromEvent);
-      element.addEventListener("dragend", setDrop);
+
+      ["dragstart", "touchstart"].forEach((evt) =>
+        element.addEventListener(evt, setOnlyStartFromEvent),
+      );
+      ["dragend", "touchend"].forEach((evt) => element.addEventListener(evt, setDrop));
+
       setElementWidth(+element.getAttribute("width"));
     }
   }, [element]);

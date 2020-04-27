@@ -4,6 +4,9 @@ function isTouchEvent(event) {
 
 export function getPosition(event: any): any {
   return isTouchEvent(event)
-    ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    ? {
+        x: event.changedTouches[event.changedTouches.length - 1].pageX,
+        y: event.changedTouches[event.changedTouches.length - 1].pageY,
+      }
     : { x: event.clientX, y: event.clientY };
 }
