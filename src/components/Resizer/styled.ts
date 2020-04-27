@@ -12,5 +12,5 @@ export const ResizeControl = styled.div`
   height: 2rem;
   bottom: 0;
   right: 0;
-  background-color: green;
+  background-color: #34a400;
 `;

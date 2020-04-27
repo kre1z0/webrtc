@@ -2,7 +2,6 @@ import React, { useRef, RefObject, useEffect, useState } from "react";
 
 import { fetchStream } from "api/video";
 import { Resizer } from "components/Resizer/Resizer";
-import { VideoContainer } from "components/Video/styled";
 
 const widthRatio = 4;
 
@@ -34,10 +33,11 @@ export const Video = () => {
   const height = Math.round(width / ratio);
 
   return (
-    <VideoContainer>
+    <>
+      {error && <span>{error.toString()}</span>}
       <Resizer element={video.current} ratio={ratio}>
         <video ref={video} width={width} height={height} />
       </Resizer>
-    </VideoContainer>
+    </>
   );
 };
